@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;// This variable will determine how fast the player moves horizontally. It can be adjusted in the Unity Inspector to fine-tune the movement speed.
     float move;// This variable will store the horizontal input value from the player. It will be used to calculate the movement direction and speed.
     public float jumpForce;// This variable will determine the force applied to the player when they jump. It can be adjusted in the Unity Inspector to fine-tune the jump height.
+    bool isFacingRight = false;// This variable will keep track of the direction the player is facing. It can be used to flip the player's sprite when changing direction.
 
     private void Awake()// This method is called when the script instance is being loaded
     {
@@ -51,5 +52,17 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         body.linearVelocityX = move * speed;// This line sets the horizontal velocity of the player's Rigidbody2D based on the move variable (which contains the horizontal input) multiplied by the speed variable. This allows the player to move left or right based on their input.
+        FlipSprite();// This line calls the FlipSprite method, which checks the direction the player is moving and flips the sprite accordingly to ensure it faces the correct direction.
+    }
+
+    void FlipSprite()
+    {
+        if(isFacingRight && move <0 || !isFacingRight && move > 0)
+        {
+            isFacingRight = !isFacingRight;// This line toggles the isFacingRight variable to indicate that the player has changed direction.
+            Vector3 localScale = transform.localScale;// This line gets the current local scale of the player's transform, which is used to flip the sprite.
+            localScale.x *= -1;// This line multiplies the x component of the local scale by -1, effectively flipping the sprite horizontally.
+            transform.localScale = localScale;// This line applies the modified local scale back to the player's transform, completing the sprite flip. 
+        }
     }
 }
