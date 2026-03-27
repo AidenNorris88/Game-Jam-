@@ -4,12 +4,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public InputSystem_Actions actions; 
+    public InputSystem_Actions actions;
     public Rigidbody2D playerRb;
     public float speed;//speed of the player movement
     public float input;// the input value for horizontal movement
     public float jumpForce;// the force applied to the player when jumping
     public float move;// the value of the horizontal movement input
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -41,27 +42,28 @@ public class PlayerMovement : MonoBehaviour
         move = ctx.ReadValue<Vector2>().x;// Read the horizontal movement input from the callback context
     }
 
-    void Jumping(InputAction.CallbackContext ctx,)
+    void Jumping(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
         {
-            playerRb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);// Apply a vertical force to the player when the jump action is performed
+
+            playerRb.linearVelocityY = jumpForce;// Set the player's vertical velocity to the jump force when the jump action is performed
+
         }
+
     }
+
     void Start()
     {
-        
+        playerRb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component attached to the player GameObject
     }
 
     // Update is called once per frame
     void Update()
     {
-        input = Input.GetAxisRaw("Horizontal");// Get the horizontal input from the player
+
+        playerRb.linearVelocityX = move * speed;// Set the player's horizontal velocity based on the movement input and speed
 
     }
 
-    private void FixedUpdate()
-    {
-        playerRb.linearVelocity =  new Vector2(input * speed, playerRb.linearVelocity.y);// Set the player's velocity based on the input and speed
-    }
 }
